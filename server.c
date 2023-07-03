@@ -17,10 +17,10 @@
 int loop = 1;           // Variável de controle para manter o loop do servidor
 int uppercase_mode = 0; // 0 para minúsculo, 1 para maiúsculo
 
-// Função de tratamento do sinal SIGINT (Ctrl+C) para encerrar o loop do servidor
+// Manipulador de sinal para SIGINT (Ctrl+C)
 void sigint_handler(int sig)
 {
-  loop = 0;
+  loop = 0; // Define loop como falso para encerrar o servidor
 }
 
 // Manipulador de sinal para SIGCHLD (quando um processo filho termina)
@@ -31,7 +31,7 @@ void sigchld_handler(int sig)
   // "Reap" (espera) todos os processos filhos que terminaram
 }
 
-// Função para imprimir o uso correto do programa e sair
+// Função para imprimir mensagem de uso correto do programa e sair
 void print_usage_and_quit(char *application_name);
 
 int main(int argc, char *argv[])
@@ -81,8 +81,7 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  // Configurar o tratamento de sinais para evitar processos zumbis
-  sa.sa_handler = sigchld_handler;
+  sa.sa_handler = sigchld_handler; // Reapar os processos filhos
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
   if (sigaction(SIGCHLD, &sa, NULL) == -1)
@@ -130,23 +129,35 @@ int main(int argc, char *argv[])
         {
           if (buffer[i] != '\n' && buffer[i] != '\0')
           {
-            if (strcmp(buffer + i, "SPACE") == 0)
+            if (strcmp(&buffer[i], "SPACE") == 0)
             {
               if (file)
+              {
                 fprintf(fp, " "); // Escreve um espaço no arquivo
+                fflush(fp);       // Atualiza o arquivo
+              }
               else
-                printf(" "); // Imprime um espaço na saída padrão
-              i += 4;        // Pula os próximos 4 caracteres após "SPACE"
+              {
+                putchar(' '); // Imprime um espaço na saída padrão
+                fflush(stdout);
+              }
+              i += 4; // Pula os próximos 4 caracteres após "SPACE"
             }
-            else if (strcmp(buffer + i, "ENTER") == 0 || strcmp(buffer + i, "RIGHTENTER") == 0)
+            else if (strcmp(&buffer[i], "ENTER") == 0 || strcmp(&buffer[i], "RIGHTENTER") == 0)
             {
               if (file)
+              {
                 fprintf(fp, "\n"); // Escreve uma nova linha no arquivo
+                fflush(fp);        // Atualiza o arquivo
+              }
               else
-                printf("\n");              // Imprime uma nova linha na saída padrão
-              i += strlen(buffer + i) - 1; // Pula os caracteres restantes após "ENTER" ou "RIGHTENTER"
+              {
+                putchar('\n'); // Imprime uma nova linha na saída padrão
+                fflush(stdout);
+              }
+              i += strlen(&buffer[i]) - 1; // Pula os caracteres restantes após "ENTER" ou "RIGHTENTER"
             }
-            else if (strcmp(buffer + i, "BACKSPACE") == 0)
+            else if (strcmp(&buffer[i], "BACKSPACE") == 0)
             {
               if (file)
               {
@@ -154,16 +165,19 @@ int main(int argc, char *argv[])
                 fseek(fp, -1, SEEK_CUR);
                 // Trunca o arquivo na posição atual
                 ftruncate(fileno(fp), ftell(fp));
+                fflush(fp); // Atualiza o arquivo
               }
               else
               {
                 // Volta um caractere na saída padrão
-                printf("\b \b");
+                putchar('\b');
+                putchar(' ');
+                putchar('\b');
                 fflush(stdout);
               }
-              i += strlen(buffer + i) - 1; // Pula os caracteres restantes após "BACKSPACE"
+              i += strlen(&buffer[i]) - 1; // Pula os caracteres restantes após "BACKSPACE"
             }
-            else if (strcmp(buffer + i, "CAPSLOCK") == 0)
+            else if (strcmp(&buffer[i], "CAPSLOCK") == 0)
             {
               uppercase_mode = !uppercase_mode; // Alternar entre maiúsculo e minúsculo
               i += 7;
@@ -181,30 +195,35 @@ int main(int argc, char *argv[])
               }
 
               if (file)
+              {
                 fprintf(fp, "%c", buffer[i]); // Escrever no arquivo de saída
+                fflush(fp);                   // Atualiza o arquivo
+              }
               else
+              {
                 printf("%c", buffer[i]); // Imprimir na saída padrão
+                fflush(stdout);
+              }
             }
           }
         }
         bytes_received = recv(new_fd, buffer, sizeof(buffer), 0);
       }
-      if (file)
-        fflush(fp); // Descarregar o buffer do arquivo de saída
 
-      close(new_fd); // Fechar a conexão no processo filho
-      exit(0);       // Encerrar o processo filho
+      close(new_fd); // Fecha o descritor de arquivo do cliente
+      exit(0);       // Encerra o processo filho
     }
   }
 
-  close(new_fd); // Fechar a conexão no processo pai
+  close(new_fd); // Fecha o descritor de arquivo do cliente
 
   if (file)
-    fclose(fp); // Fechar o arquivo de saída, se foi aberto
+    fclose(fp); // Fecha o arquivo, se estiver aberto
+
   return 0;
 }
 
-// Função para imprimir o uso correto do programa e sair
+// Imprime mensagem de uso correto do programa e encerra
 void print_usage_and_quit(char *application_name)
 {
   printf("Usage: %s [-s] filename\n", application_name);
