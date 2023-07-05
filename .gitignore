@@ -2,3 +2,4 @@
 *.o
 keylog
 server
+log.txt

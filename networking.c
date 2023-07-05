@@ -33,7 +33,7 @@ int get_socket_file_descriptor(char *hostname, char *port)
 
   setup_addrinfo(&servinfo, hostname, port, 0);
 
-  // Connect to the first possible result
+  // Conecta ao primeiro resultado possivel
   for (p = servinfo; p != NULL; p = p->ai_next)
   {
     if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
@@ -76,7 +76,8 @@ int get_listener_socket_file_descriptor(char *port)
 
   setup_addrinfo(&servinfo, NULL, port, AI_PASSIVE);
 
-  // Bind to the first possible result
+  // Vincula ao primeiro resultado possivel
+
   for (p = servinfo; p != NULL; p = p->ai_next)
   {
     if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
@@ -85,7 +86,7 @@ int get_listener_socket_file_descriptor(char *port)
       continue;
     }
 
-    // Allow this port to be reused later
+    // Permite que essa porta seja reutilizada depois
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
     {
       perror("setsockopt");
