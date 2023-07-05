@@ -136,11 +136,10 @@ int main(int argc, char *argv[])
                 fprintf(fp, " "); // Escreve um espaço no arquivo
                 fflush(fp);       // Atualiza o arquivo
               }
-              else
-              {
-                putchar(' '); // Imprime um espaço na saída padrão
-                fflush(stdout);
-              }
+
+              putchar(' '); // Imprime um espaço na saída padrão
+              fflush(stdout);
+
               i += 4; // Pula os próximos 4 caracteres após "SPACE"
             }
             else if (strcmp(&buffer[i], "ENTER") == 0 || strcmp(&buffer[i], "RIGHTENTER") == 0)
@@ -150,11 +149,10 @@ int main(int argc, char *argv[])
                 fprintf(fp, "\n"); // Escreve uma nova linha no arquivo
                 fflush(fp);        // Atualiza o arquivo
               }
-              else
-              {
-                putchar('\n'); // Imprime uma nova linha na saída padrão
-                fflush(stdout);
-              }
+
+              putchar('\n'); // Imprime uma nova linha na saída padrão
+              fflush(stdout);
+
               i += strlen(&buffer[i]) - 1; // Pula os caracteres restantes após "ENTER" ou "RIGHTENTER"
             }
             else if (strcmp(&buffer[i], "BACKSPACE") == 0)
@@ -167,14 +165,13 @@ int main(int argc, char *argv[])
                 ftruncate(fileno(fp), ftell(fp));
                 fflush(fp); // Atualiza o arquivo
               }
-              else
-              {
-                // Volta um caractere na saída padrão
-                putchar('\b');
-                putchar(' ');
-                putchar('\b');
-                fflush(stdout);
-              }
+
+              // Volta um caractere na saída padrão
+              putchar('\b');
+              putchar(' ');
+              putchar('\b');
+              fflush(stdout);
+
               i += strlen(&buffer[i]) - 1; // Pula os caracteres restantes após "BACKSPACE"
             }
             else if (strcmp(&buffer[i], "CAPSLOCK") == 0)
@@ -199,11 +196,9 @@ int main(int argc, char *argv[])
                 fprintf(fp, "%c", buffer[i]); // Escrever no arquivo de saída
                 fflush(fp);                   // Atualiza o arquivo
               }
-              else
-              {
-                printf("%c", buffer[i]); // Imprimir na saída padrão
-                fflush(stdout);
-              }
+
+              printf("%c", buffer[i]); // Imprimir na saída padrão
+              fflush(stdout);
             }
           }
         }
