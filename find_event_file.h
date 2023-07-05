@@ -12,8 +12,8 @@
 #include <string.h>
 
 /**
- * Tries to find the filepath of a connected keyboard
- * \return malloc allocated filepath of keyboard, or NULL if none could be
- *         detected
+ * Tenta encontrar o diretorio de um teclado conectado
+ * \return diretorio do teclado alocado na memoria, ou NULL se nenhum foi
+ *         detectado
  */
 char *get_keyboard_event_file(void);

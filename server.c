@@ -10,7 +10,7 @@
 #include <ctype.h>
 #include "networking.h"
 
-#define PORT "3491"
+#define PORT "5000"
 #define BACKLOG 15
 #define BUFFER_SIZE 1000
 
