@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <signal.h>  //Define funções para manipulação de sinais.
+#include <sys/types.h> //Contém definições de tipos de dados usados nas chamadas do sistema
+#include <sys/wait.h> //Fornece funções relacionadas à espera de processos filhos
+#include <sys/socket.h> // Contém definições para a criação e manipulação de sockets
+#include <arpa/inet.h> // Contém definições para operações de Internet
+#include <unistd.h> //Fornece acesso às chamadas do sistema relacionadas ao POSIX
 #include <string.h>
 #include <ctype.h>
 #include "networking.h"
@@ -48,12 +48,12 @@ int main(int argc, char *argv[])
 
   int file = 0, option = 0;
   // Processar argumentos de linha de comando para a opção de arquivo de saída
-  while ((option = getopt(argc, argv, "sf:")) != -1)
+  while ((option = getopt(argc, argv, "sf:")) != -1) //getopt é uma função da biblioteca padrão do C que facilita o processamento de argumentos de linha de comando
   {
     switch (option)
     {
     case 's':
-      // Redirecionar saída padrão e saída de erro para /dev/null
+      // Redirecionar saída padrão e saída de erro para /dev/null (descartado)
       freopen("/dev/null", "w", stdout);
       freopen("/dev/null", "w", stderr);
       break;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
   }
 
   // Obtém o descritor de arquivo do socket do servidor
-  sockfd = get_listener_socket_file_descriptor(PORT);
+  sockfd = get_listener_socket_file_descriptor(PORT); //utiliza as chamadas de sistema socket e bind para criar e associar o socket a uma porta específica
 
   // Configura o servidor para ouvir por conexões
   if (listen(sockfd, BACKLOG) == -1)
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
   sa.sa_handler = sigchld_handler; // Reapar os processos filhos
   sigemptyset(&sa.sa_mask);
-  sa.sa_flags = SA_RESTART;
+  sa.sa_flags = SA_RESTART; // Reinicialização de chamadas de sistema interrompidas por sinais
   if (sigaction(SIGCHLD, &sa, NULL) == -1)
   {
     perror("sigaction");
@@ -160,7 +160,8 @@ int main(int argc, char *argv[])
               if (file)
               {
                 // Volta um caractere no arquivo
-                fseek(fp, -1, SEEK_CUR);
+                fseek(fp, -1, SEEK_CUR); // Retroceder um caractere no arquivo de saída (fp). 
+                // O argumento -1 indica que o arquivo deve ser retrocedido em uma posição a partir da posição atual
                 // Trunca o arquivo na posição atual
                 ftruncate(fileno(fp), ftell(fp));
                 fflush(fp); // Atualiza o arquivo
