@@ -8,7 +8,7 @@
 #include "networking.h"
 #include "find_event_file.h"
 
-#define PORT "5000"
+#define PORT "10000"
 
 void print_usage_and_quit(char *application_name); // mensagem padrão para caso de erro
 

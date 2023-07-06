@@ -1,19 +1,19 @@
 #include "find_event_file.h"
 
-// Diretorio onde os arquivos de evento estão guardados
+// Diretório onde os arquivos de evento estão guardados
 #define INPUT_DIR "/dev/input/"
 
-// Funcao que descobre se o arquivo passado eh um dispositivo de caracteres
+// Função que descobre se o arquivo passado é um dispositivo de caracteres
 static int is_char_device(const struct dirent *file)
 {
   struct stat filestat;
   char filename[512];
   int err;
 
-  // Funcao que concatena INPUT_DIR com o nome do arquivo passado
+  // Função que concatena INPUT_DIR com o nome do arquivo passado
   snprintf(filename, sizeof(filename), "%s%s", INPUT_DIR, file->d_name);
 
-  // Funcao que verifica se o arquivo eh um dispositivo de caracteres
+  // Função que verifica se o arquivo é um dispositivo de caracteres
   err = stat(filename, &filestat);
   if (err)
   {
@@ -30,7 +30,7 @@ char *get_keyboard_event_file(void)
   struct dirent **event_files;
   char filename[512];
 
-  // Percorre o diretorio e retorna o numero de arquivos no diretorio (filtrados)
+  // Percorre o diretório e retorna o número de arquivos no diretório (filtrados)
   num = scandir(INPUT_DIR, &event_files, &is_char_device, &alphasort);
   if (num < 0)
   {
@@ -44,7 +44,7 @@ char *get_keyboard_event_file(void)
       int fd;
       int32_t kbd_bitmap = KEY_A | KEY_B | KEY_C | KEY_Z;
 
-      snprintf(filename, sizeof(filename), "%s%s", INPUT_DIR, event_files[i]->d_name); // Concatenacao
+      snprintf(filename, sizeof(filename), "%s%s", INPUT_DIR, event_files[i]->d_name); // Concatenação
       fd = open(filename, O_RDONLY);                                                   // Abre o arquivo
 
       if (fd == -1)
@@ -59,9 +59,9 @@ char *get_keyboard_event_file(void)
       {
         // Verifica os eventos do tipo EV_KEY (Especificamente de teclado)
         ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(event_bitmap)), &event_bitmap);
-        if ((kbd_bitmap & event_bitmap) == kbd_bitmap) // Se os eventos forem compativeis com kbd_bitmap
+        if ((kbd_bitmap & event_bitmap) == kbd_bitmap) // Se os eventos forem compatíveis com kbd_bitmap
         {
-          keyboard_file = strdup(filename); // Copia o diretorio do arquivo para keyboard_file
+          keyboard_file = strdup(filename); // Copia o diretório do arquivo para keyboard_file
           close(fd);
           break;
         }
@@ -71,7 +71,7 @@ char *get_keyboard_event_file(void)
     }
   }
 
-  // Limpa o array event_files, liberando a memoria
+  // Limpa o array event_files, liberando a memória
   for (i = 0; i < num; ++i)
   {
     free(event_files[i]);
